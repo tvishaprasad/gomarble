@@ -1,79 +1,79 @@
-# GoMarble Review Scraper Assignment
+# GoMarble Review Scraper Project
 
-## Overview
+## Introduction
 
-This project is an API server designed to extract review information from product pages. It utilizes OpenAI's Large Language Models (LLMs) to dynamically determine CSS selectors for reviews and employs Selenium for browser automation to handle pagination and retrieve all reviews. The API is compatible with platforms like Shopify and Amazon.
+This project is an API server designed to extract reviews from product pages. It leverages OpenAI's Large Language Models (LLMs) to dynamically identify CSS selectors for reviews and uses Selenium for automated browser interactions to handle pagination and collect all reviews. The API supports platforms such as Shopify and Amazon.
 
-## System Architecture
+## System Workflow
 
-The following diagram illustrates the project's workflow:
+The workflow for the project is illustrated below:
 
 ```mermaid
 graph TD;
-    A[User Interface] -->|Enter Product URL| B[Flask API Server];
-    B -->|Send URL to Scraper| C[Scraper Component];
-    C -->|Fetch HTML Content| D{OpenAI Integration};
-    D -->|Extract CSS Selectors| C;
-    C -->|Scrape Reviews using Selectors| E[Processed Data Flow];
-    E -->|Return JSON Response| B;
+    A[User Input] -->|Submit Product URL| B[API Server];
+    B -->|Send URL to Scraper| C[Scraper Module];
+    C -->|Retrieve HTML Content| D[OpenAI API];
+    D -->|Identify CSS Selectors| C;
+    C -->|Extract Reviews| E[Data Processing];
+    E -->|Return JSON Data| B;
     B -->|Display Reviews| A;
 
-    subgraph Frontend
+    subgraph User Interface
         A;
     end
 
-    subgraph Backend
+    subgraph Server
         B;
         C;
         D;
         E;
     end
 
-    subgraph Deployment
-        F[Railway Hosting];
+    subgraph Hosting
+        F[Railway Deployment];
     end
 
-    B -->|Deploy Flask API| F;
+    B -->|Deploy API| F;
 ```
 
-### Description:
+### Components:
 
-1. **User Interface (Frontend)**
-   - Users input a product page URL to retrieve reviews.
+1. **User Input**
+   - Users submit the URL of a product page to retrieve reviews.
 
-2. **Flask API Server (Backend)**
-   - Manages API requests and forwards them to the scraper.
+2. **API Server**
+   - Manages incoming requests and communicates with the scraper module.
 
-3. **Scraper Component (Selenium)**
-   - Uses browser automation to extract review data from product pages.
+3. **Scraper Module**
+   - Utilizes Selenium for automated scraping and OpenAI for CSS selector identification.
 
-4. **OpenAI Integration**
-   - Dynamically identifies review-related CSS selectors from HTML content.
+4. **OpenAI API**
+   - Dynamically identifies relevant CSS selectors from the HTML content.
 
-5. **Processed Data Flow**
-   - Returns the extracted review data in JSON format.
+5. **Data Processing**
+   - Compiles the extracted reviews into JSON format.
 
-6. **Deployment (Railway Hosting)**
-   - The API server is hosted online for public access.
-
----
-
-## Features
-
-- **Dynamic CSS Selector Identification**: Leverages OpenAI's API to dynamically determine the CSS selectors for review elements.
-- **Browser Automation**: Utilizes Selenium for headless browser scraping.
-- **Pagination Handling**: Automatically processes paginated reviews (limited to 10 pages to ensure quick execution, but this can be adjusted).
-- **Universal Compatibility**: Adapts dynamically to work with various review pages.
-- **Deployed API**: Hosted on Railway for easy public access.
+6. **Hosting**
+   - The API is deployed on Railway for public access.
 
 ---
 
-## API Endpoint
+## Key Features
+
+- **Dynamic CSS Selector Detection**: Uses OpenAI's API to dynamically pinpoint CSS selectors for review elements.
+- **Automated Scraping**: Employs Selenium for headless browser automation.
+- **Pagination Support**: Automatically navigates through multiple review pages (limited to 10 pages for efficiency, adjustable as needed).
+- **Cross-Platform Compatibility**: Adapts to various review pages across different platforms.
+- **Live Deployment**: Accessible through a Railway-hosted endpoint.
+
+---
+
+## API Details
 
 ### `GET /api/reviews?page={url}`
 
-- **Parameters**:  
-    `page` (required) – The URL of the product page to scrape reviews from.
+- **Query Parameter**:  
+    `page` (required) – The URL of the product page to scrape.
 
 - **Response Format:**
 
@@ -83,7 +83,7 @@ graph TD;
         "reviews": [
             {
                 "title": "Review Title",
-                "body": "Review body text",
+                "body": "Content of the review",
                 "rating": 5,
                 "reviewer": "Reviewer Name"
             }
@@ -93,20 +93,20 @@ graph TD;
 
 ---
 
-## Prerequisites
+## Requirements
 
-- **Python 3.10+**
+- **Python 3.10 or higher**
 - **Google Chrome** and **ChromeDriver**
-- **OpenAI API Key** (stored in `.env` file)
+- **OpenAI API Key** (stored in a `.env` file)
 
 ---
 
-## Installation and Setup
+## Installation Guide
 
 1. **Clone the Repository**
     ```
-    git clone https://github.com/gomarble-review-scraper.git
-    cd gomarble-review-scraper
+    git clone https://github.com/gomarble.git
+    cd gomarble
     ```
 
 2. **Install Dependencies**
@@ -114,16 +114,16 @@ graph TD;
     pip install --no-cache-dir -r requirements.txt
     ```
 
-3. **Set Up the Environment**
-    - Create a `.env` file in the root directory:
+3. **Configure Environment Variables**
+    - Create a `.env` file in the project root:
 
         ```env
         OPENAI_API_KEY="your_openai_api_key"
         ```
 
-    - Replace `your_openai_api_key` with your actual OpenAI API key.
+    - Replace `your_openai_api_key` with your actual API key from OpenAI.
 
-4. **Run the Server**
+4. **Start the Server**
     ```
     python app.py
     ```
@@ -133,15 +133,15 @@ graph TD;
 
 ---
 
-## Deployment
+## Deployment Information
 
-The API is hosted on Railway and can be accessed via the following live URL:
+The API is deployed on Railway and can be accessed at:
 
-https://gomarble-test-production.up.railway.app/
+https://gomarble-production.up.railway.app/
 
 ---
 
-## Contact
+## Contact Information
 
-For any questions or feedback, please contact me at anshusuresh03@gmail.com.
+For any inquiries or feedback, feel free to reach out via email at anshusuresh03@gmail.com.
 
