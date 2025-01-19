@@ -95,37 +95,42 @@
     async function fetchReviews() {
       const url = document.getElementById('urlInput').value;
       const resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = "";
-
+      resultsDiv.innerHTML = ""; // Clear previous results
+    
       if (!url) {
-        resultsDiv.innerHTML = <div class='error'>Please enter a valid URL.</div>;
+        resultsDiv.innerHTML = "<div class='error'>Please enter a valid URL.</div>";
         return;
       }
-
+    
       try {
         resultsDiv.innerHTML = "<p class='success'>Fetching reviews...</p>";
-
-        const response = await fetch(${API_BASE_URL}?page=${encodeURIComponent(url)});
+    
+        const response = await fetch(`${API_BASE_URL}?page=${encodeURIComponent(url)}`);
         if (!response.ok) {
-          throw new Error(HTTP Error: ${response.status});
+          throw new Error(`HTTP Error: ${response.status}`);
         }
-
+    
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error("Unexpected response format. Expected JSON.");
+        }
+    
         const data = await response.json();
-        resultsDiv.innerHTML = <div class='success'>Found ${data.reviews_count} reviews:</div>;
-
+        resultsDiv.innerHTML = `<div class='success'>Found ${data.reviews_count} reviews:</div>`;
+    
         data.reviews.forEach((review) => {
           const reviewDiv = document.createElement('div');
           reviewDiv.className = "review";
           reviewDiv.innerHTML = `
             <p><strong>Title:</strong> ${review.title || "N/A"}</p>
             <p><strong>Body:</strong> ${review.body}</p>
-            <p><strong>Rating:</strong> <span class='rating'>${review.rating}</span></p>
+            <p><strong>Rating:</strong> <span class="rating">${review.rating}</span></p>
             <p><strong>Reviewer:</strong> ${review.reviewer || "Anonymous"}</p>
           `;
           resultsDiv.appendChild(reviewDiv);
         });
       } catch (error) {
-        resultsDiv.innerHTML = <div class='error'>Error: ${error.message}</div>;
+        resultsDiv.innerHTML = `<div class='error'>Error: ${error.message}</div>`;
       }
     }
   </script>
