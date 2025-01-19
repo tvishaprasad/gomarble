@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Scraper</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .reviews {
+      margin-top: 20px;
+    }
+    .review {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+    }
+    .review:last-child {
+      border-bottom: none;
+    }
+    .rating {
+      font-weight: bold;
+      color: #ff9800;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Review Scraper</h1>
+    <p>Enter a product page URL below to scrape reviews:</p>
+    <input type="text" id="urlInput" placeholder="Enter product page URL" />
+    <button onclick="fetchReviews()">Scrape Reviews</button>
+    <div id="results" class="reviews"></div>
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://gomarble-test-production.up.railway.app/api/reviews"; // Update this for production deployment
+
+    async function fetchReviews() {
+      const url = document.getElementById('urlInput').value;
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = ""; // Clear previous results
+    
+      if (!url) {
+        resultsDiv.innerHTML = "<p style='color: red;'>Please enter a valid URL.</p>";
+        return;
+      }
+    
+      try {
+        resultsDiv.innerHTML = "<p>Fetching reviews...</p>";
+    
+        const response = await fetch(`${API_BASE_URL}?page=${encodeURIComponent(url)}`);
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`);
+        }
+    
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error("Unexpected response format. Expected JSON.");
+        }
+    
+        const data = await response.json();
+        resultsDiv.innerHTML = `<p>Found ${data.reviews_count} reviews:</p>`;
+    
+        data.reviews.forEach((review) => {
+          const reviewDiv = document.createElement('div');
+          reviewDiv.className = "review";
+          reviewDiv.innerHTML = `
+            <p><strong>Title:</strong> ${review.title || "N/A"}</p>
+            <p><strong>Body:</strong> ${review.body}</p>
+            <p><strong>Rating:</strong> <span class="rating">${review.rating}</span></p>
+            <p><strong>Reviewer:</strong> ${review.reviewer || "Anonymous"}</p>
+          `;
+          resultsDiv.appendChild(reviewDiv);
+        });
+      } catch (error) {
+        resultsDiv.innerHTML = `<p style='color: red;'>Error: ${error.message}</p>`;
+      }
+    }
+    
+    
+  </script>
+</body>
+</html>
